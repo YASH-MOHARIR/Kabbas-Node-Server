@@ -19,6 +19,9 @@ const allowedOrigins = [
 
 console.log("Allowed Origins:", allowedOrigins);
 
+// JSON Middleware
+app.use(express.json());
+
 // CORS Middleware
 app.use(
   cors({
@@ -33,6 +36,18 @@ app.use(
   })
 );
 
+// Fallback Middleware to Ensure Headers
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.header("Access-Control-Allow-Origin", origin);
+    res.header("Access-Control-Allow-Credentials", "true");
+    res.header("Access-Control-Allow-Methods", "GET,HEAD,PUT,PATCH,POST,DELETE");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  }
+  next();
+});
+
 // Preflight Handling
 app.options("*", (req, res) => {
   const origin = req.headers.origin;
@@ -43,7 +58,7 @@ app.options("*", (req, res) => {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     return res.sendStatus(200);
   }
-  res.sendStatus(403);
+  res.sendStatus(403); // Forbidden if origin not allowed
 });
 
 // Session Configuration
@@ -61,9 +76,6 @@ if (process.env.NODE_ENV !== "development") {
   };
 }
 app.use(session(sessionOptions));
-
-// JSON Middleware
-app.use(express.json());
 
 // Routes
 UserRoutes(app);
