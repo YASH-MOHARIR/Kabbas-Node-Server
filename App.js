@@ -19,7 +19,7 @@ const allowedOrigins = [
 // CORS Middleware
 app.use(
   cors({
-    credentials: true, // Allow credentials
+    credentials: true,
     origin: function (origin, callback) {
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
@@ -30,7 +30,7 @@ app.use(
   })
 );
 
-// Preflight Request Handling
+// Preflight Handling
 app.options("*", (req, res) => {
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
@@ -52,8 +52,8 @@ const sessionOptions = {
 if (process.env.NODE_ENV !== "development") {
   sessionOptions.proxy = true;
   sessionOptions.cookie = {
-    sameSite: "none", // Cross-origin cookie
-    secure: true, // HTTPS only
+    sameSite: "none",
+    secure: true,
     domain: process.env.NODE_SERVER_DOMAIN,
   };
 }
@@ -61,6 +61,16 @@ app.use(session(sessionOptions));
 
 // JSON Middleware
 app.use(express.json());
+
+// Ensure All Routes Send CORS Headers
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.header("Access-Control-Allow-Origin", origin);
+    res.header("Access-Control-Allow-Credentials", "true");
+  }
+  next();
+});
 
 // Routes
 UserRoutes(app);
