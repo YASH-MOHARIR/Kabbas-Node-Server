@@ -13,8 +13,11 @@ const app = express();
 
 // Define allowed origins
 const allowedOrigins = [
-  process.env.NETLIFY_URL || "http://localhost:3000"
+  process.env.NETLIFY_URL || "http://localhost:3000",
+  "https://a5--kanbas-yash-moharir.netlify.app" // Ensure Netlify URL is included
 ];
+
+console.log("Allowed Origins:", allowedOrigins);
 
 // CORS Middleware
 app.use(
@@ -61,16 +64,6 @@ app.use(session(sessionOptions));
 
 // JSON Middleware
 app.use(express.json());
-
-// Ensure All Routes Send CORS Headers
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.header("Access-Control-Allow-Origin", origin);
-    res.header("Access-Control-Allow-Credentials", "true");
-  }
-  next();
-});
 
 // Routes
 UserRoutes(app);
