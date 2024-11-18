@@ -16,9 +16,9 @@ export default function UserRoutes(app) {
   const deleteUser = (req, res) => {};
 
   const findAllUsers = (req, res) => {
-    console.log("all users");
+    // console.log("all users");
     const users = dao.findAllUsers();
-    console.log(users);
+    // console.log(users);
     res.json(users);
   };
   
