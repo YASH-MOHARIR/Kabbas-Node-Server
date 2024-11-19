@@ -15,7 +15,7 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    origin:"https://a-5--webdev-yash-moharir-landing-pag.netlify.app",
+    origin: process.env.NETLIFY_URL || "https://a-5--webdev-yash-moharir-landing-pag.netlify.app",
 
   })
  );
