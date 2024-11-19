@@ -15,7 +15,7 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: process.env.NETLIFY_URL || "http://localhost:3000" || "https://a-5--webdev-yash-moharir-landing-pag.netlify.app",
+    origin:"https://a-5--webdev-yash-moharir-landing-pag.netlify.app",
 
   })
  );
